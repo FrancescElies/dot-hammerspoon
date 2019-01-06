@@ -4,13 +4,27 @@
 -- You should make any changes there and regenerate it from Emacs org-mode using C-c C-v t
 
 hs.logger.defaultLogLevel="info"
+logger = hs.logger.new("init.lua")
 
 hyper = {"cmd","alt","ctrl"}
 shift_hyper = {"cmd","alt","ctrl","shift"}
 
+hs.hotkey.bindSpec({ hyper, "r" }, "reload config", hs.reload)
+
 col = hs.drawing.color.x11
 
-swisscom_logo = hs.image.imageFromPath(hs.configdir .. "/files/swisscom_logo_2x.png")
+workLogo = hs.image.imageFromPath(hs.configdir .. "/files/work.png")
+
+homePath = hs.fs.pathToAbsolute('~')
+
+local initStartupFile = hs.configdir .. "/init-local-startup.lua"
+local initLocalStartup=loadfile(initStartupFile)
+if initLocalStartup then
+  logger.i("Loading", "init-local-startup.lua", "")
+  initLocalStartup()
+end
+
+local appBeforeReloading = hs.application.frontmostApplication()
 
 hs.loadSpoon("SpoonInstall")
 
@@ -22,34 +36,6 @@ spoon.SpoonInstall.repos.zzspoons = {
 spoon.SpoonInstall.use_syncinstall = true
 
 Install=spoon.SpoonInstall
-
-Install:andUse("BetterTouchTool", { loglevel = 'debug' })
-BTT = spoon.BetterTouchTool
-
-Install:andUse("URLDispatcher",
-               {
-                 config = {
-                   url_patterns = {
-                     { "https?://issue.swisscom.ch",                       "org.epichrome.app.SwisscomJira" },
-                     { "https?://issue.swisscom.com",                      "org.epichrome.app.SwisscomJira" },
-                     { "https?://jira.swisscom.com",                       "org.epichrome.app.SwisscomJira" },
-                     { "https?://wiki.swisscom.com",                       "org.epichrome.app.SwisscomW408" },
-                     { "https?://collaboration.swisscom.com",              "org.epichrome.app.SwisscomCollab" },
-                     { "https?://smca.swisscom.com",                       "org.epichrome.app.SwisscomTWP" },
-                     { "https?://portal.corproot.net",                     "com.apple.Safari" },
-                     { "https?://app.opsgenie.com",                        "org.epichrome.app.OpsGenie" },
-                     { "https?://app.eu.opsgenie.com",                     "org.epichrome.app.OpsGenie" },
-                     { "https?://fiori.swisscom.com",                      "com.apple.Safari" },
-                     { "https?://pmpgwd.apps.swisscom.com/fiori",  "com.apple.Safari" },
-                     { "https?://.*webex.com",  "com.google.Chrome" },
-                   },
-                   -- default_handler = "com.google.Chrome"
-                   -- default_handler = "com.electron.brave"
-                   default_handler = "com.brave.Browser.dev"
-                 },
-                 start = true
-               }
-)
 
 Install:andUse("WindowHalfsAndThirds",
                {
@@ -80,114 +66,36 @@ Install:andUse("ToggleScreenRotation",
                }
 )
 
-Install:andUse("UniversalArchive",
-               {
-                 config = {
-                   evernote_archive_notebook = ".Archive",
-                   outlook_archive_folder = "Archive (diego.zamboni@swisscom.com)",
-                   archive_notifications = false
-                 },
-                 hotkeys = { archive = { { "ctrl", "cmd" }, "a" } }
-               }
+Install:andUse(
+  "UniversalArchive",
+  {
+    disable = true,
+    config = {
+      evernote_archive_notebook = ".Archive",
+      outlook_archive_folder = "Archive (diego.zamboni@swisscom.com)",
+      archive_notifications = false
+    },
+    hotkeys = { archive = { { "ctrl", "cmd" }, "a" } }
+  }
 )
 
-Install:andUse("SendToOmniFocus",
-               {
-                 config = {
-                   quickentrydialog = false,
-                   notifications = false
-                 },
-                 hotkeys = {
-                   send_to_omnifocus = { hyper, "t" }
-                 },
-                 fn = function(s)
-                   s:registerApplication("Swisscom Collab", { apptype = "chromeapp", itemname = "tab" })
-                   s:registerApplication("Swisscom Wiki", { apptype = "chromeapp", itemname = "wiki page" })
-                   s:registerApplication("Swisscom Jira", { apptype = "chromeapp", itemname = "issue" })
-                   s:registerApplication("Brave Browser Dev", { apptype = "chromeapp", itemname = "page" })
-                 end
-               }
-)
-
-Install:andUse("EvernoteOpenAndTag",
-               {
-                 hotkeys = {
-                   open_note = { hyper, "o" },
-                   ["open_and_tag-+work,+swisscom"] = { hyper, "w" },
-                   ["open_and_tag-+personal"] = { hyper, "p" },
-                   ["tag-@zzdone"] = { hyper, "z" }
-                 }
-               }
-)
-
-Install:andUse("TextClipboardHistory",
-               {
-                 disable = true,
-                 config = {
-                   show_in_menubar = false,
-                 },
-                 hotkeys = {
-                   toggle_clipboard = { { "cmd", "shift" }, "v" } },
-                 start = true,
-               }
-)
-
-Install:andUse("Hammer",
-               {
-                 repo = 'zzspoons',
-                 config = { auto_reload_config = false },
-                 hotkeys = {
-                   config_reload = {hyper, "r"},
-                   toggle_console = {hyper, "y"}
-                 },
-                 fn = function(s)
-                   BTT:bindSpoonActions(s,
-                                        { config_reload = {
-                                            kind = 'touchbarButton',
-                                            uuid = "FF8DA717-737F-4C42-BF91-E8826E586FA1",
-                                            name = "Restart",
-                                            icon = hs.image.imageFromName(hs.image.systemImageNames.ApplicationIcon),
-                                            color = hs.drawing.color.x11.orange,
-                                        }
-                   })
-                 end,
-                 start = true
-               }
+Install:andUse(
+  "TextClipboardHistory",
+  {
+    config = {
+      show_in_menubar = false,
+    },
+    hotkeys = {
+      toggle_clipboard = { { "cmd", "shift" }, "v" } },
+    start = true,
+  }
 )
 
 Install:andUse("Caffeine", {
                  start = true,
                  hotkeys = {
                    toggle = { hyper, "1" }
-                 },
-                 fn = function(s)
-                   BTT:bindSpoonActions(s, {
-                                          toggle = {
-                                            kind = 'touchbarWidget',
-                                            uuid = '72A96332-E908-4872-A6B4-8A6ED2E3586F',
-                                            name = 'Caffeine',
-                                            widget_code = [[
-do
-  title = " "
-  icon = hs.image.imageFromPath(spoon.Caffeine.spoonPath.."/caffeine-off.pdf")
-  if (hs.caffeinate.get('displayIdle')) then
-    icon = hs.image.imageFromPath(spoon.Caffeine.spoonPath.."/caffeine-on.pdf")
-  end
-  print(hs.json.encode({ text = title, icon_data = BTT:hsimageToBTTIconData(icon) }))
-end
-  ]],
-                                            code = "spoon.Caffeine.clicked()",
-                                            widget_interval = 1,
-                                            color = hs.drawing.color.x11.black,
-                                            icon_only = true,
-                                            icon_size = hs.geometry.size(15,15),
-                                            BTTTriggerConfig = {
-                                              BTTTouchBarFreeSpaceAfterButton = 0,
-                                              BTTTouchBarItemPadding = -6,
-                                            },
-                                          }
-                   })
-                 end
+                 }
 })
 
 Install:andUse("MenubarFlag",
@@ -205,7 +113,6 @@ Install:andUse("MenubarFlag",
 
 Install:andUse("MouseCircle",
                {
-                 disable = true,
                  config = {
                    color = hs.drawing.color.x11.rebeccapurple
                  },
@@ -219,31 +126,12 @@ Install:andUse("ColorPicker",
                {
                  disable = true,
                  hotkeys = {
-                   show = { shift_hyper, "c" }
+                   show = { hyper, "c" }
                  },
                  config = {
                    show_in_menubar = false,
                  },
                  start = true,
-               }
-)
-
-Install:andUse("BrewInfo",
-               {
-                 config = {
-                   brew_info_style = {
-                     textFont = "Inconsolata",
-                     textSize = 14,
-                     radius = 10 }
-                 },
-                 hotkeys = {
-                   -- brew info
-                   show_brew_info = {hyper, "b"},
-                   open_brew_url = {shift_hyper, "b"},
-                   -- brew cask info
-                   show_brew_cask_info = {hyper, "c"},
-                   open_brew_cask_url = {shift_hyper, "c"},
-                 }
                }
 )
 
@@ -268,6 +156,54 @@ Install:andUse("HeadphoneAutoPause",
                }
 )
 
+hs.timer.doAt("12:58", function () hs.notify.show("Lunch Time", os.date():sub(1), "") end)
+hs.timer.doAt("17:50", function () hs.notify.show("Time reminder", os.date():sub(1), "") end)
+
+function getMousePosition()
+  local position = hs.mouse.getAbsolutePosition()
+  logger.i("Mouse Position", string.format("%s, %s", position.x, position.y), "")
+  hs.notify.show("Mouse Position", "recorded", string.format("%s, %s", position.x, position.y))
+  logger.i("Scripting help", string.format("hs.mouse.setAbsolutePosition(hs.geometry.point(%s, %s))", position.x, position.y), "")
+  logger.i("Scripting help", string.format("hs.eventtap.leftClick(hs.geometry.point(%s, %s))", position.x, position.y), "")
+  logger.i("Scripting help", string.format("hs.timer.doAfter(sec, fn) -> timer", position.x, position.y), "")
+end
+hs.hotkey.bindSpec({ shift_hyper, "m" }, "log mouse position", getMousePosition)
+
+-- Register browser tab typist: Type URL of current tab of running
+-- browser in org mode link format. i.e. [[link][title]]
+-- TODO browser in markdown format. i.e. [title](link)
+function getBrowserLinkAsOrgModeLink()
+    local currentApp = hs.application.frontmostApplication()
+    local brave_running = hs.application.applicationsForBundleID("Brave")
+    local safari_running = hs.application.applicationsForBundleID("com.apple.Safari")
+    local chrome_running = hs.application.applicationsForBundleID("com.google.Chrome")
+    local firefox_running = hs.application.applicationsForBundleID("org.mozilla.firefox")
+
+    function dataToOrgLink(data)
+        return "[[" .. data[1] .. "][" .. data[2] .. "]]"
+    end
+
+    if #brave_running > 0 then
+      local stat, data = hs.applescript('tell application "Safari" to get {URL, name} of current tab of window 1')
+      if stat then hs.eventtap.keyStrokes(dataToOrgLink(data)) end
+    elseif #safari_running > 0 then
+      local stat, data = hs.applescript('tell application "Safari" to get {URL, name} of current tab of window 1')
+      if stat then hs.eventtap.keyStrokes(dataToOrgLink(data)) end
+    elseif #chrome_running > 0 then
+      local stat, data = hs.applescript('tell application "Google Chrome" to get {URL, title} of active tab of window 1')
+      if stat then hs.eventtap.keyStrokes(dataToOrgLink(data)) end
+    elseif #firefox_running > 0 then
+      succeeded, parsedOutput, rawOutputOrError = hs.osascript.applescriptFromFile(hs.configdir .. '/get-firefox-url.scpt')
+      currentApp:activate()
+      -- hs.pasteboard.setContents(dataToOrgLink(parsedOutput))
+      -- hs.eventtap.keyStroke({"cmd"}, "v")
+      if parsedOutput then hs.eventtap.keyStrokes(dataToOrgLink(parsedOutput)) end
+    end
+end
+hs.hotkey.bindSpec({ hyper, "l" }, "browser URL as org mode link", getBrowserLinkAsOrgModeLink)
+
+hs.hotkey.bindSpec({ hyper, "c" }, "toggle console",hs.toggleConsole)
+
 Install:andUse("Seal",
                {
                  hotkeys = { show = { {"cmd"}, "space" } },
@@ -280,17 +216,39 @@ Install:andUse("Seal",
                            url = "http://hammerspoon.org/docs/",
                            icon = hs.image.imageFromName(hs.image.systemImageNames.ApplicationIcon),
                          },
-                         ["Leave corpnet"] = {
-                           fn = function()
-                             spoon.WiFiTransitions:processTransition('foo', 'corpnet01')
-                           end,
-                           icon = swisscom_logo,
+                         ["Corrector català"] = {
+                           url = "https://www.softcatala.org/corrector/",
+                           icon = hs.image.imageFromName(hs.image.systemImageNames.Computer),
                          },
-                         ["Arrive in corpnet"] = {
+                         ["Set default browser to firefox"] = {
+                           fn = function () setDefaultBrowser("firefox") end,
+                           icon = hs.image.imageFromName(hs.image.systemImageNames.Computer),
+                         },
+                         ["Set default browser to chrome"] = {
+                           fn = function () setDefaultBrowser( "chrome") end,
+                           icon = hs.image.imageFromName(hs.image.systemImageNames.Computer),
+                         },
+                         ["Set default browser to brave"] = {
+                           fn = function () setDefaultBrowser("browser") end,
+                           icon = hs.image.imageFromName(hs.image.systemImageNames.Computer),
+                         },
+                         ["WIFI: Leave work (" .. workNetwork .. ")"] = {
                            fn = function()
-                             spoon.WiFiTransitions:processTransition('corpnet01', 'foo')
+                             spoon.WiFiTransitions:processTransition(homeNetwork, workNetwork)
                            end,
-                           icon = swisscom_logo,
+                           icon = workLogo,
+                         },
+                         ["WIFI: Arrive work (" .. workNetwork .. ")"] = {
+                           fn = function()
+                             spoon.WiFiTransitions:processTransition(workNetwork, nil)
+                           end,
+                           icon = workLogo,
+                         },
+                         ["WIFI: Arrive home (" .. homeNetwork .. ")"] = {
+                           fn = function()
+                             spoon.WiFiTransitions:processTransition(homeNetwork, nil)
+                           end,
+                           icon = workLogo,
                          },
                          ["Translate using Leo"] = {
                            url = "http://dict.leo.org/englisch-deutsch/${query}",
@@ -304,72 +262,132 @@ Install:andUse("Seal",
                }
 )
 
-function reconfigSpotifyProxy(proxy)
-  local spotify = hs.appfinder.appFromName("Spotify")
-  local lastapp = nil
-  if spotify then
-    lastapp = hs.application.frontmostApplication()
-    spotify:kill()
-    hs.timer.usleep(40000)
-  end
-  --   hs.notify.show(string.format("Reconfiguring %sSpotify", ((spotify~=nil) and "and restarting " or "")), string.format("Proxy %s", (proxy and "enabled" or "disabled")), "")
-  -- I use CFEngine to reconfigure the Spotify preferences
-  cmd = string.format("/usr/local/bin/cf-agent -K -f %s/files/spotify-proxymode.cf%s", hs.configdir, (proxy and " -DPROXY" or " -DNOPROXY"))
-  output, status, t, rc = hs.execute(cmd)
-  if spotify and lastapp then
-    hs.timer.doAfter(3,
-                     function()
-                       if not hs.application.launchOrFocus("Spotify") then
-                         hs.notify.show("Error launching Spotify", "", "")
-                       end
-                       if lastapp then
-                         hs.timer.doAfter(0.5, hs.fnutils.partial(lastapp.activate, lastapp))
-                       end
-    end)
+function startApp(appName)
+  logger.i("start app", string.format("'%s'", appName), "")
+  hs.application.launchOrFocus(appName)
+end
+
+function stopApp(appName)
+  local app = hs.appfinder.appFromName(appName)
+  if app then
+    logger.i("quit app", string.format("'%s'", appName), "")
+    app:kill()
   end
 end
 
-function reconfigAdiumProxy(proxy)
-  --   hs.notify.show("Reconfiguring Adium", string.format("Proxy %s", (proxy and "enabled" or "disabled")), "")
-  local script = string.format([[
-tell application "Adium"
-  repeat with a in accounts
-    if (enabled of a) is true then
-      set proxy enabled of a to %s
-    end if
-  end repeat
-  go offline
-  go online
-end tell
-]], hs.inspect(proxy))
-  hs.osascript.applescript(script)
+function backupToRaspberry()
+  local cmd = "~/usr/bin/my-raspberry-sync"
+  task = hs.task.new(
+    cmd,
+    function(exitCode, stdOut, stdErr)
+      logger.i("Rsync", "finished", string.format("exitCode: '%s'", exitCode))
+    end
+  )
+  task:start()
 end
 
-Install:andUse("WiFiTransitions",
-               {
-                 config = {
-                   actions = {
-                     -- { -- Test action just to see the SSID transitions
-                     --    fn = function(_, _, prev_ssid, new_ssid)
-                     --       hs.notify.show("SSID change", string.format("From '%s' to '%s'", prev_ssid, new_ssid), "")
-                     --    end
-                     -- },
-                     { -- Enable proxy in Spotify and Adium config when joining corp network
-                       to = "corpnet01",
-                       fn = {hs.fnutils.partial(reconfigSpotifyProxy, true),
-                             hs.fnutils.partial(reconfigAdiumProxy, true),
-                       }
-                     },
-                     { -- Disable proxy in Spotify and Adium config when leaving corp network
-                       from = "corpnet01",
-                       fn = {hs.fnutils.partial(reconfigSpotifyProxy, false),
-                             hs.fnutils.partial(reconfigAdiumProxy, false),
-                       }
-                     },
-                   }
-                 },
-                 start = true,
-               }
+function manageDocker(action)
+  logger.i("Docker", action, "")
+  if (action == 'start') then
+    output, status, t, rc = hs.execute("~/usr/bin/work-docker.sh", true)
+  else
+    output, status, t, rc = hs.execute("~/usr/bin/work-docker.sh stop", true)
+  end
+end
+
+function homeTmuxStart()
+  logger.i("Tmux", "start", "")
+  output, status, t, rc = hs.execute("~/usr/bin/home-tmux.sh", true)
+end
+
+function workTmuxStart()
+  logger.i("Tmux", "start", "")
+  output, status, t, rc = hs.execute("~/usr/bin/work-tmux.sh", true)
+end
+
+function workTmuxStop()
+  logger.i("Tmux", "stop", "")
+  output, status, t, rc = hs.execute("tmux kill-session -twork", true)
+end
+
+function setDefaultBrowser(browserName)
+  -- browserName: can be firefox, chrome or browser (brave)
+  logger.i("setDefaultBrowser", browserName, "")
+  -- defaultbrowser: https://github.com/kerma/defaultbrowser
+  local home = hs.fs.pathToAbsolute('~')
+  output, status, t, rc = hs.execute(string.format("defaultbrowser %s", browserName), true)
+  hs.osascript.applescriptFromFile(hs.configdir .. '/confirm-yes-system-dialog.scpt')
+end
+
+function TableConcat(t1,t2)
+    local tFinal = {}
+    for i=1,#t1 do
+        tFinal[#tFinal+1] = t1[i]
+    end
+    for i=1,#t2 do
+        tFinal[#tFinal+1] = t2[i]
+    end
+    return tFinal
+end
+
+leaveWorkGroup = {
+  hs.fnutils.partial(manageDocker, "stop"),
+  hs.fnutils.partial(stopApp, "Slack"),
+  hs.fnutils.partial(stopApp, "com.google.Chrome"),
+  hs.fnutils.partial(workTmuxStop),
+  hs.fnutils.partial(startApp, "Firefox"),
+  hs.fnutils.partial(setDefaultBrowser, "firefox"),
+  hs.fnutils.partial(hs.timer.doAfter, 60, hs.fnutils.partial(stopApp, "Docker")),
+}
+
+startWorkGroup = {
+  hs.fnutils.partial(homeTmuxStart),
+  hs.fnutils.partial(startApp, "Docker"),
+  hs.fnutils.partial(manageDocker, "start"),
+  hs.fnutils.partial(stopApp, "Firefox"),
+  hs.fnutils.partial(startApp, "Slack"),
+  hs.fnutils.partial(startApp, "com.google.Chrome"),
+  hs.fnutils.partial(setDefaultBrowser, "chrome"),
+  hs.fnutils.partial(hs.timer.doAfter, 90, workTmuxStart),  -- needs to wait for docker (30 seconds)
+}
+
+arriveHomeGroup = {
+  hs.fnutils.partial(homeTmuxStart),
+  backupToRaspberry,
+}
+
+function recordTime(action)
+  local fileName = homePath .. "/tmp/joined-wifi.txt"
+  local file = io.open(fileName, "a")
+  file:write(action)
+  file:close()
+end
+
+Install:andUse(
+  "WiFiTransitions",
+  {
+    config = {
+      actions = {
+        { -- Test action just to see the SSID transitions
+          fn = function(_, _, prev_ssid, new_ssid)
+            local date = os.date()
+            local transition = string.format("%s from '%s' to '%s'\n", date, prev_ssid, new_ssid)
+            recordTime(transition)
+            hs.notify.show("SSID change", transition, "")
+          end
+        },
+        {       -- when joining home network do:
+          to = homeNetwork,
+          fn = TableConcat(arriveHomeGroup, leaveWorkGroup)
+        },
+        {       -- when joining work network do:
+          to = workNetwork,
+          fn = startWorkGroup
+        },
+      }
+    },
+    start = true,
+  }
 )
 
 local wm=hs.webview.windowMasks
@@ -405,6 +423,14 @@ if localstuff then
   localstuff()
 end
 
+hotkeys = hs.hotkey.getHotkeys()
+for k, v in pairs(hotkeys) do
+  -- idx - a string describing the keyboard combination for the hotkey
+  -- msg - the hotkey message, if provided when the hotkey was created
+  -- (prefixed with the keyboard combination)
+  print(string.format("%s %s", v.msg, v.idx))
+end
+
 Install:andUse("FadeLogo",
                {
                  config = {
@@ -414,4 +440,6 @@ Install:andUse("FadeLogo",
                }
 )
 
--- hs.notify.show("Welcome to Hammerspoon", "Have fun!", "")
+-- hs.notify.show("Configuration reloaded", "Enjoy!", "")
+
+appBeforeReloading:activate()
