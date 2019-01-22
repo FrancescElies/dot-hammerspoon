@@ -759,37 +759,35 @@ Install:andUse(
 I live in Switzerland, and my German is far from perfect, so the [[http://www.hammerspoon.org/Spoons/PopupTranslateSelection.html][PopupTranslateSelection]] spoon helps me a lot. It allows me to select some text and, with a keystroke, translate it to any of three languages using Google Translate. Super useful! Usually, Google's auto-detect feature works fine, so the =translate_to_<lang>= keys are sufficient. I have some =translate_<from>_<to>= keys set up for certain language pairs for when this doesn't quite work (I don't think I've ever needed them).
 
 #+begin_src lua
-  local wm=hs.webview.windowMasks
-  Install:andUse("PopupTranslateSelection",
-                 {
-                   disable = true,
-                   config = {
-                     popup_style = wm.utility|wm.HUD|wm.titled|wm.closable|wm.resizable,
-                   },
-                   hotkeys = {
-                     translate_to_en = { hyper, "e" },
-                     translate_to_de = { hyper, "d" },
-                     translate_to_es = { hyper, "s" },
-                     translate_de_en = { shift_hyper, "e" },
-                     translate_en_de = { shift_hyper, "d" },
-                   }
-                 }
-  )
+local wm=hs.webview.windowMasks
+Install:andUse(
+  "PopupTranslateSelection",
+  {
+    config = {
+      popup_style = wm.utility|wm.HUD|wm.titled|wm.closable|wm.resizable,
+    },
+    hotkeys = {
+      translate = { hyper, "t" },
+    }
+  }
+)
 #+end_src
 
 I am now testing [[http://www.hammerspoon.org/Spoons/DeepLTranslate.html][DeepLTranslate]], based on PopupTranslateSelection but which uses the [[https://www.deepl.com/en/translator][DeepL translator]].
 
 #+begin_src lua
-  Install:andUse("DeepLTranslate",
-                 {
-                   config = {
-                     popup_style = wm.utility|wm.HUD|wm.titled|wm.closable|wm.resizable,
-                   },
-                   hotkeys = {
-                     translate = { hyper, "e" },
-                   }
-                 }
-  )
+Install:andUse(
+  "DeepLTranslate",
+  {
+    disable = true,
+    config = {
+      popup_style = wm.utility|wm.HUD|wm.titled|wm.closable|wm.resizable,
+    },
+    hotkeys = {
+      translate = { hyper, "e" },
+    }
+  }
+)
 #+end_src
 
 * Miscellaneous stuff
