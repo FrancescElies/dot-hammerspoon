@@ -24,6 +24,7 @@ If you want to learn more about Hammerspoon, check out [[https://leanpub.com/lea
 
 * Table of Contents                                          :TOC_3:noexport:
 - [[#general-variables-and-configuration][General variables and configuration]]
+- [[#key-bindings][Key bindings]]
 - [[#spoon-management][Spoon Management]]
 - [[#window-and-screen-manipulation][Window and screen manipulation]]
   - [[#window-halfs-and-thirds][Window Halfs and Thirds]]
@@ -109,6 +110,47 @@ the configuration file.
 #+begin_src lua
 local appBeforeReloading = hs.application.frontmostApplication()
 #+end_src
+
+* Key bindings
+
+| Mod  | Key   | Description                         |
+|------+-------+-------------------------------------|
+| ⌘⌃   | 1     | Window move to quadrant 1 ◰         |
+| ⌘⌃   | 2     | Window move to quadrant 2 ◳         |
+| ⌘⌃   | 3     | Window move to quadrant 3 ◱         |
+| ⌘⌃   | 4     | Window move to quadrant 4 ◲         |
+| ⌘⌃   | UP    | Window move third and halfs ↑       |
+| ⌘⌃   | RIGHT | Window move third and halfs →       |
+| ⌘⌃   | DOWN  | Window move third and halfs ↓       |
+| ⌘⌃   | LEFT  | Window move third and halfs ←       |
+| ⌃⌥   | UP    | Window to next third ↑              |
+| ⌃⌥   | RIGHT | Window to next third →              |
+| ⌃⌥   | DOWN  | Window to next third ↓              |
+| ⌃⌥   | LEFT  | Window to next third ←              |
+| ⌘⌃⌥  | UP    | Maximize window                     |
+| ⌘⌃⌥  | F     | Maximize window                     |
+| ⌘⌃⌥  | G     | Resize with grid                    |
+| ⌘⌥⇧  | LEFT  | Shrink window horizontally          |
+| ⌘⌥⇧  | RIGHT | Grow window horizontally            |
+| ⌘⌥   | Z     | Undo  window action                 |
+|------+-------+-------------------------------------|
+| ⌘⌃⌥⇧ | M     | log mouse position                  |
+| ⌘⇧   | V     | Clipboard History (Paste)           |
+| ⌘⌥   | C     | Window to the center                |
+| ⌘    | SPACE | Spotlight (Seal)                    |
+| ⌘⌃⌥  | 1     | Caffeine                            |
+| ⌘⌃⌥  | C     | Show/Hide console                   |
+| ⌘⌃⌥  | L     | Insert browser URL as org mode link |
+| ⌘⌃⌥  | M     | Locate mouse                        |
+| ⌘⌃⌥  | R     | Reload config                       |
+| ⌘⌃⌥  | T     | Translate text                      |
+|------+-------+-------------------------------------|
+| ⌘⌃⌥  | F15   |                                     |
+| ⌘⌃⌥⇧ | F     |                                     |
+| ⌘⌃⌥⇧ | V     |                                     |
+| ⌘⌃⌥  | LEFT  |                                     |
+| ⌘⌃⌥  | RIGHT |                                     |
+|------+-------+-------------------------------------|
 
 * Spoon Management
 
