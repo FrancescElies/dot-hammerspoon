@@ -133,29 +133,29 @@ local appBeforeReloading = hs.application.frontmostApplication()
 | ⌘⌃⌥  | UP    | Maximize window                     |
 | ⌘⌃⌥  | F     | Maximize window                     |
 | ⌘⌃⌥  | G     | Resize with grid                    |
+| ⌘⌥   | Z     | Undo  window action                 |
+| ⌘⌃⌥  | C     | Show/Hide console                   |
 | ⌘⌥⇧  | LEFT  | Shrink window horizontally          |
 | ⌘⌥⇧  | RIGHT | Grow window horizontally            |
-| ⌘⌥   | Z     | Undo  window action                 |
 
 ** Other shortcuts
-| Mod  | Key   | Description                         |
-|------+-------+-------------------------------------|
-| ⌘⌃⌥⇧ | M     | log mouse position                  |
-| ⌘⇧   | V     | Clipboard History (Paste)           |
-| ⌘⌥   | C     | Window to the center                |
-| ⌘    | SPACE | Spotlight (Seal)                    |
-| ⌘⌃⌥  | 1     | Caffeine                            |
-| ⌘⌃⌥  | C     | Show/Hide console                   |
-| ⌘⌃⌥  | L     | Insert browser URL as org mode link |
-| ⌘⌃⌥  | M     | Locate mouse                        |
-| ⌘⌃⌥  | R     | Reload config                       |
-| ⌘⌃⌥  | T     | Translate text                      |
-| ⌘⌃⌥  | F15   |                                     |
-| ⌘⌃⌥⇧ | F     |                                     |
-| ⌘⌃⌥⇧ | V     |                                     |
-| ⌘⌃⌥  | LEFT  |                                     |
-| ⌘⌃⌥  | RIGHT |                                     |
-|------+-------+-------------------------------------|
+| Mod  | Key   | Description                             |
+|------+-------+-----------------------------------------|
+| ⌘⌃⌥⇧ | M     | log mouse position                      |
+| ⌘⇧   | V     | Clipboard History (Paste)               |
+| ⌘⌥   | C     | Window to the center                    |
+| ⌘    | SPACE | Spotlight (Seal)                        |
+| ⌘⌃⌥  | 1     | Caffeine (avoids laptop going to sleep) |
+| ⌘⌃⌥  | L     | Insert browser URL as org mode link     |
+| ⌘⌃⌥  | M     | Locate mouse                            |
+| ⌘⌃⌥  | R     | Reload config                           |
+| ⌘⌃⌥  | T     | Translate text                          |
+| ⌘⌃⌥  | F15   |                                         |
+| ⌘⌃⌥⇧ | F     |                                         |
+| ⌘⌃⌥⇧ | V     |                                         |
+| ⌘⌃⌥  | LEFT  |                                         |
+| ⌘⌃⌥  | RIGHT |                                         |
+|------+-------+-----------------------------------------|
 
 * Spoon Management
 
