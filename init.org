@@ -25,6 +25,8 @@ If you want to learn more about Hammerspoon, check out [[https://leanpub.com/lea
 * Table of Contents                                          :TOC_3:noexport:
 - [[#general-variables-and-configuration][General variables and configuration]]
 - [[#key-bindings][Key bindings]]
+  - [[#window-management][Window management]]
+  - [[#other-shortcuts][Other shortcuts]]
 - [[#spoon-management][Spoon Management]]
 - [[#window-and-screen-manipulation][Window and screen manipulation]]
   - [[#window-halfs-and-thirds][Window Halfs and Thirds]]
@@ -113,6 +115,7 @@ local appBeforeReloading = hs.application.frontmostApplication()
 
 * Key bindings
 
+** Window management
 | Mod  | Key   | Description                         |
 |------+-------+-------------------------------------|
 | ⌘⌃   | 1     | Window move to quadrant 1 ◰         |
@@ -133,6 +136,9 @@ local appBeforeReloading = hs.application.frontmostApplication()
 | ⌘⌥⇧  | LEFT  | Shrink window horizontally          |
 | ⌘⌥⇧  | RIGHT | Grow window horizontally            |
 | ⌘⌥   | Z     | Undo  window action                 |
+
+** Other shortcuts
+| Mod  | Key   | Description                         |
 |------+-------+-------------------------------------|
 | ⌘⌃⌥⇧ | M     | log mouse position                  |
 | ⌘⇧   | V     | Clipboard History (Paste)           |
@@ -144,7 +150,6 @@ local appBeforeReloading = hs.application.frontmostApplication()
 | ⌘⌃⌥  | M     | Locate mouse                        |
 | ⌘⌃⌥  | R     | Reload config                       |
 | ⌘⌃⌥  | T     | Translate text                      |
-|------+-------+-------------------------------------|
 | ⌘⌃⌥  | F15   |                                     |
 | ⌘⌃⌥⇧ | F     |                                     |
 | ⌘⌃⌥⇧ | V     |                                     |
