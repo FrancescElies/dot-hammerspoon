@@ -700,7 +700,7 @@ startWorkGroup = {
   hs.fnutils.partial(startApp, "Slack"),
   hs.fnutils.partial(startApp, "com.google.Chrome"),
   hs.fnutils.partial(setDefaultBrowser, "chrome"),
-  hs.fnutils.partial(hs.timer.doAfter, 120, workTmuxStart),  -- needs to wait for docker (30 seconds)
+  hs.fnutils.partial(hs.timer.doAfter, 150, workTmuxStart),  -- needs to wait for docker (x seconds)
 }
 #+END_SRC
 
