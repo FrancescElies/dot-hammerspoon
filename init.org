@@ -851,7 +851,7 @@ for k, v in pairs(hotkeys) do
   -- idx - a string describing the keyboard combination for the hotkey
   -- msg - the hotkey message, if provided when the hotkey was created
   -- (prefixed with the keyboard combination)
-  print(string.format("%s %s", v.msg, v.idx))
+  print(string.format("key %s", v.msg))
 end
 #+end_src
 
