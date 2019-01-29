@@ -740,13 +740,13 @@ leaveWorkGroup = {
 Actions to be performed when arriving to work.
 #+begin_src lua
 startWorkGroup = {
+  hs.fnutils.partial(stopApp, "Firefox"),
+  hs.fnutils.partial(startApp, "Slack"),
+  hs.fnutils.partial(setDefaultBrowser, "chrome"),
+  hs.fnutils.partial(startApp, "com.google.Chrome"),
   hs.fnutils.partial(homeTmuxStart),
   hs.fnutils.partial(startApp, "Docker"),
   hs.fnutils.partial(manageDocker, "start"),
-  hs.fnutils.partial(stopApp, "Firefox"),
-  hs.fnutils.partial(startApp, "Slack"),
-  hs.fnutils.partial(startApp, "com.google.Chrome"),
-  hs.fnutils.partial(setDefaultBrowser, "chrome"),
   hs.fnutils.partial(hs.timer.doAfter, 150, workTmuxStart),  -- needs to wait for docker (x seconds)
 }
 #+END_SRC

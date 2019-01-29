@@ -341,13 +341,13 @@ leaveWorkGroup = {
 }
 
 startWorkGroup = {
+  hs.fnutils.partial(stopApp, "Firefox"),
+  hs.fnutils.partial(startApp, "Slack"),
+  hs.fnutils.partial(setDefaultBrowser, "chrome"),
+  hs.fnutils.partial(startApp, "com.google.Chrome"),
   hs.fnutils.partial(homeTmuxStart),
   hs.fnutils.partial(startApp, "Docker"),
   hs.fnutils.partial(manageDocker, "start"),
-  hs.fnutils.partial(stopApp, "Firefox"),
-  hs.fnutils.partial(startApp, "Slack"),
-  hs.fnutils.partial(startApp, "com.google.Chrome"),
-  hs.fnutils.partial(setDefaultBrowser, "chrome"),
   hs.fnutils.partial(hs.timer.doAfter, 150, workTmuxStart),  -- needs to wait for docker (x seconds)
 }
 
