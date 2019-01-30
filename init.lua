@@ -172,35 +172,47 @@ hs.hotkey.bindSpec({ shift_hyper, "m" }, "log mouse position", getMousePosition)
 -- Register browser tab typist: Type URL of current tab of running
 -- browser in org mode link format. i.e. [[link][title]]
 -- TODO browser in markdown format. i.e. [title](link)
-function getBrowserLinkAsOrgModeLink()
+function getBrowserLink(dataToTextConvert)
     local currentApp = hs.application.frontmostApplication()
     local brave_running = hs.application.applicationsForBundleID("Brave")
     local safari_running = hs.application.applicationsForBundleID("com.apple.Safari")
     local chrome_running = hs.application.applicationsForBundleID("com.google.Chrome")
     local firefox_running = hs.application.applicationsForBundleID("org.mozilla.firefox")
 
-    function dataToOrgLink(data)
-        return "[[" .. data[1] .. "][" .. data[2] .. "]]"
-    end
+    local insert = hs.eventtap.keyStrokes
 
     if #brave_running > 0 then
       local stat, data = hs.applescript('tell application "Safari" to get {URL, name} of current tab of window 1')
-      if stat then hs.eventtap.keyStrokes(dataToOrgLink(data)) end
+      if stat then insert(dataToTextConvert(data)) end
     elseif #safari_running > 0 then
       local stat, data = hs.applescript('tell application "Safari" to get {URL, name} of current tab of window 1')
-      if stat then hs.eventtap.keyStrokes(dataToOrgLink(data)) end
+      if stat then insert(dataToTextConvert(data)) end
     elseif #chrome_running > 0 then
       local stat, data = hs.applescript('tell application "Google Chrome" to get {URL, title} of active tab of window 1')
-      if stat then hs.eventtap.keyStrokes(dataToOrgLink(data)) end
+      if stat then insert(dataToTextConvert(data)) end
     elseif #firefox_running > 0 then
       succeeded, parsedOutput, rawOutputOrError = hs.osascript.applescriptFromFile(hs.configdir .. '/get-firefox-url.scpt')
       currentApp:activate()
-      -- hs.pasteboard.setContents(dataToOrgLink(parsedOutput))
+      -- hs.pasteboard.setContents(dataToTextConvert(parsedOutput))
       -- hs.eventtap.keyStroke({"cmd"}, "v")
-      if parsedOutput then hs.eventtap.keyStrokes(dataToOrgLink(parsedOutput)) end
+      if parsedOutput then insert(dataToTextConvert(parsedOutput)) end
     end
 end
-hs.hotkey.bindSpec({ hyper, "l" }, "browser URL as org mode link", getBrowserLinkAsOrgModeLink)
+
+-- dataToTextConvert functions
+local function convertDataToOrgModeLink(data)
+  -- converts data into org-mode link
+  local name = data[2]
+  name, _ = string.gsub(name, "%[", "{")
+  name, _ = string.gsub(name, "%]", "}")
+  return "[[" .. data[1] .. "][" .. name .. "]]"
+end
+local function convertDataToRawLink(data)
+  -- converts data into raw link
+  return data[1]
+end
+hs.hotkey.bindSpec({ hyper,       "l" }, "Insert Browser URL (Org-Mode Link)", hs.fnutils.partial(getBrowserLink, convertDataToOrgModeLink))
+hs.hotkey.bindSpec({ shift_hyper, "l" }, "Insert Browser URL",                 hs.fnutils.partial(getBrowserLink, convertDataToRawLink))
 
 hs.hotkey.bindSpec({ hyper, "c" }, "toggle console",hs.toggleConsole)
 
