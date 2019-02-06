@@ -199,10 +199,12 @@ function getBrowserLink(dataToTextConvert)
     end
 end
 
+
 -- dataToTextConvert functions
 local function convertDataToOrgModeLink(data)
   -- converts data into org-mode link
   local name = data[2]
+  -- replace square brackets (they break org-mode-links)
   name, _ = string.gsub(name, "%[", "{")
   name, _ = string.gsub(name, "%]", "}")
   return "[[" .. data[1] .. "][" .. name .. "]]"
@@ -360,7 +362,7 @@ startWorkGroup = {
   hs.fnutils.partial(homeTmuxStart),
   hs.fnutils.partial(startApp, "Docker"),
   hs.fnutils.partial(manageDocker, "start"),
-  hs.fnutils.partial(hs.timer.doAfter, 150, workTmuxStart),  -- needs to wait for docker (x seconds)
+  -- hs.fnutils.partial(workTmuxStart),
 }
 
 arriveHomeGroup = {
