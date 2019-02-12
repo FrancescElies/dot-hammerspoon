@@ -390,14 +390,14 @@ Install:andUse(
             hs.notify.show("SSID change", transition, "")
           end
         },
-        {       -- when joining home network do:
-          to = homeNetwork,
-          fn = TableConcat(arriveHomeGroup, leaveWorkGroup)
-        },
-        {       -- when joining work network do:
-          to = workNetwork,
-          fn = startWorkGroup
-        },
+        -- {       -- when joining home network do:
+        --   to = homeNetwork,
+        --   fn = TableConcat(arriveHomeGroup, leaveWorkGroup)
+        -- },
+        -- {       -- when joining work network do:
+        --   to = workNetwork,
+        --   fn = startWorkGroup
+        -- },
       }
     },
     start = true,
