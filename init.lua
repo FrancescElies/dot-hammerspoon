@@ -220,7 +220,7 @@ hs.hotkey.bindSpec({ hyper, "c" }, "toggle console",hs.toggleConsole)
 
 Install:andUse("Seal",
                {
-                 hotkeys = { show = { {"cmd"}, "space" } },
+                 hotkeys = { show = { hyper, "space" } },
                  fn = function(s)
                    s:loadPlugins({"apps", "calc", "safari_bookmarks", "screencapture", "useractions"})
                    s.plugins.safari_bookmarks.always_open_with_safari = false
