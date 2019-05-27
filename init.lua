@@ -169,6 +169,12 @@ function getMousePosition()
 end
 hs.hotkey.bindSpec({ shift_hyper, "m" }, "log mouse position", getMousePosition)
 
+function defeatPasteBlocking()
+  hs.eventtap.keyStrokes(hs.pasteboard.getContents())
+end
+
+hs.hotkey.bindSpec({ hyper, "v" }, "defeat paste blocking", defeatPasteBlocking)
+
 -- Register browser tab typist: Type URL of current tab of running
 -- browser in org mode link format. i.e. [[link][title]]
 -- TODO browser in markdown format. i.e. [title](link)

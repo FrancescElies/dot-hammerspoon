@@ -40,6 +40,7 @@ If you want to learn more about Hammerspoon, check out [[https://leanpub.com/lea
 - [[#other-applications][Other applications]]
 - [[#timers][Timers]]
 - [[#mouse][Mouse]]
+- [[#defeating-paste-blocking][Defeating paste blocking]]
 - [[#browser-links][Browser links]]
 - [[#console][Console]]
 - [[#seal][Seal]]
@@ -420,6 +421,25 @@ function getMousePosition()
   logger.i("Scripting help", string.format("hs.timer.doAfter(sec, fn) -> timer", position.x, position.y), "")
 end
 hs.hotkey.bindSpec({ shift_hyper, "m" }, "log mouse position", getMousePosition)
+#+end_src
+
+* Defeating paste blocking
+Source: [[https://www.hammerspoon.org/go/][hammerspoon.org/go]]
+
+You may have noticed that some programs and websites try very hard to
+stop you from pasting in your password. They seem to think it makes them
+more secure, but in the age of strongly encrypted password managers,
+this is, of course, nonsense.
+
+Fortunately, we can route around their damage by emitting fake keyboard
+events to type the contents of the clipboard:
+
+#+begin_src lua
+function defeatPasteBlocking()
+  hs.eventtap.keyStrokes(hs.pasteboard.getContents())
+end
+
+hs.hotkey.bindSpec({ hyper, "v" }, "defeat paste blocking", defeatPasteBlocking)
 #+end_src
 
 * Browser links
